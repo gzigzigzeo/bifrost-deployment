@@ -1,0 +1,64 @@
+# bitcoin:
+#   image: nebolsin/bitcoin-rpc
+#   tag: latest
+#   pullPolicy: Always
+#   ports:
+#     rpc: 8332
+#     peer: 8333
+#   resources:
+#     requests:
+#       memory: "256Mi"
+#       cpu: "125m"
+#     limits:
+#       memory: "512Mi"
+#       cpu: "250m"
+#   env:
+#     - name: BITCOIND_TESTNET
+#       value: "1"
+#     - name: BITCOIND_ASSUMEVALID
+#       value: "000000000000e86ed2844aec23e06bcfadbea88d5e718acf22de0ff24d13d44d"
+#     - name: BITCOIND_RPCHOST
+#       value: "0.0.0.0"
+#     - name: BITCOIND_RPCALLOWIP
+#       value: "::/0"
+#     - name: BITCOIND_RPCCONNECT
+#       value: bitcoin
+#     - name: BITCOIND_PRINTTOCONSOLE
+#       value: "0"
+#     - name: BITCOIND_RPCUSER
+#       value: bifrost
+#     - name: BITCOIND_RPCAUTH
+#       valueFrom:
+#         secretKeyRef:
+#           name: secret
+#           key: bitcoin-rpcauth
+#           optional: true
+#     - name: BITCOIND_RPCPASSWORD
+#       valueFrom:
+#         secretKeyRef:
+#           name: secret
+#           key: bitcoin-rpcpassword
+#
+# ethereum:
+#   image: ethereum/client-go
+#   tag: alpine
+#   pullPolicy: IfNotPresent
+#   ports:
+#     rpc: 8545
+#     peer: 30303
+#   args:
+#     port: 8545
+#     testnet: true
+#     cache: 512
+#     fast: true
+#   resources:
+#     requests:
+#       memory: "512Mi"
+#       cpu: "125m"
+#     limits:
+#       memory: "768Mi"
+#       cpu: "250m"
+#   flags: ["--testnet", "--fast", "--cache", "512", "--rpc"]
+#
+# stellar-core:
+#

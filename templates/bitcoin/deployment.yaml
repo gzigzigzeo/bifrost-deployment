@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+        component: bitcoin
+    spec:
+      containers:
+        - name: bitcoin
+          image: nebolsin/bitcoin-rpc
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: bitcoin-v{{ .Release.Revision }}-configmap-env
+            - secretRef:
+                name: bitcoin-v{{ .Release.Revision }}-{{ .Release.Name }}-secret
+          ports:
+            - containerPort: {{ .Values.bitcoin.environment.BITCOIND_PORT }}
+              name: peer
+            - containerPort: {{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}
+              name: rpc
+          volumeMounts:
+            - name: bitcoin-disk
+              mountPath: "/home/bitcoin/.bitcoin"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "125m"
+            limits:
+              memory: "768Mi"
+              cpu: "250m"              
+      volumes:
+        - name: bitcoin-disk
+          gcePersistentDisk:
+            pdName: bitcoin-disk
+            fsType: ext4
+metadata:
+  name: bitcoin
+  labels: {{ include "default-deployment-labels" . | indent 4 }}

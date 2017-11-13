@@ -1,0 +1,8 @@
+{{- $file := printf "config/stellar-core.%s.cfg.tmpl" .Values.stage }}
+apiVersion: v1
+kind: ConfigMap
+data:
+  stellar-core.cfg.tmpl: |
+{{ .Files.Get $file | indent 4 }}
+metadata:
+  name: core-v{{ .Release.Revision }}-configmap-files

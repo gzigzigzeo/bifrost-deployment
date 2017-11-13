@@ -1,0 +1,38 @@
+stage: staging
+
+core:
+  environment:
+    PEER_PORT: "11625"
+    HTTP_PORT: "11626"
+  secret:
+    STELLAR_CORE_DATABASE_URL: "user=stellar password=- host=127.0.0.1 dbname=core"
+
+horizon:
+  environment:
+    HTTP_PORT: "8000"
+  secret:
+    DATABASE_URL: "postgres://stellar:-@127.0.0.1/horizon?sslmode=disable"
+    STELLAR_CORE_DATABASE_URL: "postgres://stellar:-@127.0.0.1/core?sslmode=disable"
+
+bitcoin:
+  secret:
+    BITCOIND_RPCAUTH: "bifrost:-"
+    BITCOIND_RPCPASSWORD: "-"
+  environment:
+    BITCOIND_PORT: "8333"
+    BITCOIND_RPCPORT: "8332"
+    BITCOIND_TESTNET: "1"
+    BITCOIND_ASSUMEVALID: 000000000000e86ed2844aec23e06bcfadbea88d5e718acf22de0ff24d13d44d
+    BITCOIND_RPCHOST: "0.0.0.0"
+    BITCOIND_RPCALLOWIP: "::/0"
+    BITCOIND_RPCUSER: bifrost
+    BITCOIND_RPCCONNECT: bitcoin
+    BITCOIND_PRINTTOCONSOLE: "1"
+
+ethereum:
+  args:
+    testnet: true
+    cache: "512"
+    port: "30303"
+    rpc: true
+    rpcport: "8545"

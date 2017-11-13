@@ -1,0 +1,42 @@
+# apiVersion: extensions/v1beta1
+# kind: Deployment
+# metadata:
+#   name: {{ template "bifrost-deployment.fullname" . }}-bitcoin
+#   labels:
+#     app: {{ template "bifrost-deployment.name" . }}
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+# spec:
+#   replicas: {{ .Values.replicaCount }}
+#   strategy:
+#     type: Recreate
+#   template:
+#     metadata:
+#       labels:
+#         app: {{ template "bifrost-deployment.name" . }}
+#         release: {{ .Release.Name }}
+#     spec:
+#       containers:
+#         - name: {{ .Chart.Name }}-bitcoin
+#           image: {{ .Values.bitcoin.image }}:{{ .Values.bitcoin.tag }}
+#           imagePullPolicy: {{ .Values.bitcoin.pullPolicy }}
+#           ports:
+#             - containerPort: {{ .Values.bitcoin.ports.peer }}
+#             - containerPort: {{ .Values.bitcoin.ports.rpc }}
+#           volumeMounts:
+#             - name: bitcoin-storage
+#               mountPath: /home/bitcoin/.bitcoin
+#           env:
+# {{ toYaml .Values.bitcoin.env | indent 12 }}
+#             - name: BITCOIND_RPCPORT
+#               value: {{ .Values.bitcoin.ports.rpc | quote }}
+#             - name: BITCOIND_PORT
+#               value: {{ .Values.bitcoin.ports.peer | quote }}
+#           resources:
+# {{ toYaml .Values.bitcoin.resources | indent 12 }}
+#       volumes:
+#         - name: bitcoin-storage
+#           gcePersistentDisk:
+#             pdName: bitcoin-disk
+#             fsType: ext4

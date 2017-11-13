@@ -1,0 +1,7 @@
+apiVersion: v1
+description: A Helm chart for mobius bifrost deployment
+name: bifrost-deployment
+version: 0.1.0
+maintainers:
+  - name: Viktor Sokolov
+    email: gzigzigzeo@evilmartians.com

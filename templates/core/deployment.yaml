@@ -1,0 +1,79 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+        component: core
+    spec:
+      containers:
+        - name: core
+          image: gzigzigzeo/docker-stellar-core
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.core.environment.PEER_PORT }}
+              name: peer
+            - containerPort: {{ .Values.core.environment.HTTP_PORT }}
+              name: http
+          envFrom:
+            - secretRef:
+                name: core-v{{ .Release.Revision }}-{{ .Release.Name }}-secret
+            - configMapRef:
+                name: core-v{{ .Release.Revision }}-configmap-env
+          volumeMounts:
+            - name: config-storage
+              mountPath: /etc/confd/templates/stellar-core.cfg.tmpl
+              subPath: stellar-core.cfg.tmpl
+            - name: core-disk
+              mountPath: /var/stellar/core
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "125m"
+            limits:
+              memory: "768Mi"
+              cpu: "250m"
+          readinessProbe:
+            exec:
+              command:
+              - /docker_healthcheck.sh
+            initialDelaySeconds: 60
+            periodSeconds: 5
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=mobius-network:us-central1:stellar=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
+      volumes:
+        - name: config-storage
+          configMap:
+            defaultMode: 420
+            name: core-v{{ .Release.Revision }}-configmap-files
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: cloudsql
+          emptyDir:
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+        - name: core-disk
+          gcePersistentDisk:
+            pdName: core-disk
+            fsType: ext4
+metadata:
+  name: core
+  labels: {{ include "default-deployment-labels" . | indent 4 }}

@@ -1,0 +1,61 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+        component: horizon
+    spec:
+      containers:
+        - name: horizon
+          image: gzigzigzeo/docker-stellar-horizon
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: horizon-v{{ .Release.Revision }}-configmap-env
+            - secretRef:
+                name: horizon-v{{ .Release.Revision }}-{{ .Release.Name }}-secret
+          env:
+            - name: STELLAR_CORE_URL
+              value: "http://core-v{{ .Release.Revision }}-service-http:{{ .Values.core.environment.HTTP_PORT }}"
+          ports:
+            - containerPort: {{ .Values.horizon.environment.HTTP_PORT }}
+              name: http
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "125m"
+            limits:
+              memory: "768Mi"
+              cpu: "125m"
+
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=mobius-network:us-central1:stellar=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: cloudsql
+          emptyDir:
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+metadata:
+  name: horizon
+  labels: {{ include "default-deployment-labels" . | indent 4 }}

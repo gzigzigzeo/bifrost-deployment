@@ -1,0 +1,41 @@
+# apiVersion: extensions/v1beta1
+# kind: Deployment
+# metadata:
+#   name: {{ template "bifrost-deployment.fullname" . }}-ethereum
+#   labels:
+#     app: {{ template "bifrost-deployment.name" . }}
+#     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+#     release: {{ .Release.Name }}
+#     heritage: {{ .Release.Service }}
+# spec:
+#   replicas: {{ .Values.replicaCount }}
+#   strategy:
+#     type: Recreate
+#   template:
+#     metadata:
+#       labels:
+#         app: {{ template "bifrost-deployment.name" . }}
+#         release: {{ .Release.Name }}
+#     spec:
+#       containers:
+#         - name: {{ .Chart.Name }}-ethereum
+#           image: {{ .Values.ethereum.image }}:{{ .Values.ethereum.tag }}
+#           imagePullPolicy: {{ .Values.ethereum.pullPolicy }}
+#           command: ["/geth"]
+#           args:
+# {{ toYaml .Values.ethereum.flags | indent 12 }}
+#           ports:
+#             - containerPort: {{ .Values.ethereum.ports.rpc }}
+#             - containerPort: {{ .Values.ethereum.ports.peer }}
+#             - containerPort: {{ .Values.ethereum.ports.peer }}
+#               protocol: UDP
+#           volumeMounts:
+#             - name: ethereum-storage
+#               mountPath: /root
+#           resources:
+# {{ toYaml .Values.bitcoin.resources | indent 12 }}
+#       volumes:
+#         - name: ethereum-storage
+#           gcePersistentDisk:
+#             pdName: ethereum-disk
+#             fsType: ext4

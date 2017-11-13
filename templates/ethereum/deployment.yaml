@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+        component: ethereum
+    spec:
+      containers:
+        - name: ethereum
+          image: ethereum/client-go
+          imagePullPolicy: IfNotPresent
+          args:
+          {{- range $name, $value := .Values.ethereum.args }}
+          {{- if eq ($value | typeOf) "bool" }}
+          {{- if $value }}
+            - --{{ $name }}
+          {{- end }}
+          {{- else }}
+            - --{{ $name }}
+            - {{ $value | quote }}
+          {{- end }}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.ethereum.args.port }}
+              name: peer
+            - containerPort: {{ .Values.ethereum.args.port }}
+              protocol: UDP
+              name: peer-udp
+            - containerPort: {{ .Values.ethereum.args.rpcport }}
+              name: rpc
+          volumeMounts:
+            - name: ethereum-disk
+              mountPath: /root
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "125m"
+            limits:
+              memory: "768Mi"
+              cpu: "250m"
+      volumes:
+        - name: ethereum-disk
+          gcePersistentDisk:
+            pdName: ethereum-disk
+            fsType: ext4
+metadata:
+  name: ethereum
+  labels: {{ include "default-deployment-labels" . | indent 4 }}

@@ -13,6 +13,7 @@ horizon:
   secret:
     DATABASE_URL: "postgres://stellar:-@127.0.0.1/horizon?sslmode=disable"
     STELLAR_CORE_DATABASE_URL: "postgres://stellar:-@127.0.0.1/core?sslmode=disable"
+    # STELLAR_CORE_URL: see deployment.yaml
 
 bitcoin:
   secret:
@@ -36,3 +37,30 @@ ethereum:
     port: "30303"
     rpc: true
     rpcport: "8545"
+
+bifrost:
+  secret:
+    BIFROST_BITCOIN_RPC_PASS: "-"
+    BIFROST_STELLAR_SIGNER_SECRET_KEY: "-"
+    DATABASE_URL: "user=stellar password=- host=127.0.0.1 dbname=bifrost"
+  environment:
+    BIFROST_PORT: "8000"
+    BIFROST_USING_PROXY: "false"
+    BIFROST_BITCOIN_MASTER_PUBLIC_KEY: xpub6DxSCdWu6jKqr4isjo7bsPeDD6s3J4YVQV1JSHZg12Eagdqnf7XX4fxqyW2sLhUoFWutL7tAELU2LiGZrEXtjVbvYptvTX5Eoa4Mamdjm9u
+    # BIFROST_BITCOIN_RPC_SERVER: bitcoin:8332 See deployment.yaml
+    BIFROST_BITCOIN_TESTNET: "true"
+    BIFROST_BITCOIN_MINIMUM_VALUE_BTC: "0.0001"
+    BIFROST_BITCOIN_RPC_USER: bifrost
+
+    BIFROST_ETHEREUM_MASTER_PUBLIC_KEY: xpub6DxSCdWu6jKqr4isjo7bsPeDD6s3J4YVQV1JSHZg12Eagdqnf7XX4fxqyW2sLhUoFWutL7tAELU2LiGZrEXtjVbvYptvTX5Eoa4Mamdjm9u
+    # BIFROST_ETHEREUM_RPC_SERVER: "eth:8545" See deployment.yaml
+    BIFROST_ETHEREUM_NETWORK_ID: "3"
+    BIFROST_ETHEREUM_MINIMUM_VALUE_ETH: "0.00001"
+
+    BIFROST_STELLAR_ISSUER_PUBLIC_KEY: "GDGVTKSEXWB4VFTBDWCBJVJZLIY6R3766EHBZFIGK2N7EQHVV5UTA63C"
+    BIFROST_STELLAR_TOKEN_ASSET_CODE: "TOKE"
+    BIFROST_STELLAR_NEEDS_AUTHORIZE: "true"
+    # BIFROST_STELLAR_HORIZON: "https://horizon" See deployment.yaml
+    BIFROST_STELLAR_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
+
+    BIFROST_DATABASE_DSN: $BIFROST_DATABASE_URL

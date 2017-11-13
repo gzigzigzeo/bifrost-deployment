@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+spec:
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: {{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}
+    targetPort: {{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}
+  selector:
+    component: bitcoin
+metadata:
+  name: bitcoin-v{{ .Release.Revision }}-service-rpc

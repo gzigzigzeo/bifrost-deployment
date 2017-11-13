@@ -1,0 +1,72 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+        component: bifrost
+    spec:
+      containers:
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=mobius-network:us-central1:stellar=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
+        - name: bifrost
+          image: nebolsin/bifrost
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: bifrost-v{{ .Release.Revision }}-configmap-env
+            - secretRef:
+                name: bifrost-v{{ .Release.Revision }}-{{ .Release.Name }}-secret
+          env:
+            - name: STELLAR_CORE_URL
+              value: "http://horizon-v{{ .Release.Revision }}-service-http:{{ .Values.horizon.environment.HTTP_PORT }}"
+            - name: BIFROST_BITCOIN_RPC_SERVER
+              value: "http://bitcoin-v{{ .Release.Revision }}-service-http:{{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}"
+            - name: BIFROST_ETHEREUM_RPC_SERVER
+              value: "http://ethereum-v{{ .Release.Revision }}-service-http:{{ .Values.ethereum.args.rpcport }}"
+          ports:
+            - containerPort: {{ .Values.bifrost.environment.BIFROST_PORT }}
+              name: http
+          volumeMounts:
+            - name: config-storage
+              mountPath: /etc/confd/templates/bifrost.cfg.tmpl
+              subPath: bifrost.cfg.tmpl
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "125m"
+            limits:
+              memory: "768Mi"
+              cpu: "250m"
+      volumes:
+        - name: config-storage
+          configMap:
+            defaultMode: 420
+            name: bifrost-v{{ .Release.Revision }}-configmap-files
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+        - name: cloudsql
+          emptyDir:
+        - name: ssl-certs
+          hostPath:
+            path: /etc/ssl/certs
+metadata:
+  name: bifrost
+  labels: {{ include "default-deployment-labels" . | indent 4 }}

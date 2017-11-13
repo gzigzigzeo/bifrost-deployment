@@ -42,7 +42,7 @@ bifrost:
   secret:
     BIFROST_BITCOIN_RPC_PASS: "-"
     BIFROST_STELLAR_SIGNER_SECRET_KEY: "-"
-    DATABASE_URL: "user=stellar password=- host=127.0.0.1 dbname=bifrost"
+    BIFROST_DATABASE_URL: "user=stellar password=- host=127.0.0.1 dbname=bifrost"
   environment:
     BIFROST_PORT: "8000"
     BIFROST_USING_PROXY: "false"

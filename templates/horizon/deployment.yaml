@@ -12,6 +12,19 @@ spec:
         component: horizon
     spec:
       containers:
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=mobius-network:us-central1:stellar=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql
         - name: horizon
           image: gzigzigzeo/docker-stellar-horizon
           imagePullPolicy: IfNotPresent
@@ -33,20 +46,6 @@ spec:
             limits:
               memory: "768Mi"
               cpu: "125m"
-
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.11
-          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
-                    "-instances=mobius-network:us-central1:stellar=tcp:5432",
-                    "-credential_file=/secrets/cloudsql/credentials.json"]
-          volumeMounts:
-            - name: cloudsql-instance-credentials
-              mountPath: /secrets/cloudsql
-              readOnly: true
-            - name: ssl-certs
-              mountPath: /etc/ssl/certs
-            - name: cloudsql
-              mountPath: /cloudsql
       volumes:
         - name: cloudsql-instance-credentials
           secret:

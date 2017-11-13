@@ -12,6 +12,19 @@ spec:
         component: core
     spec:
       containers:
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=mobius-network:us-central1:stellar=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
+            - name: cloudsql
+              mountPath: /cloudsql        
         - name: core
           image: gzigzigzeo/docker-stellar-core
           imagePullPolicy: IfNotPresent
@@ -38,25 +51,12 @@ spec:
             limits:
               memory: "768Mi"
               cpu: "250m"
-          readinessProbe:
+          livenessProbe:
             exec:
               command:
               - /docker_healthcheck.sh
             initialDelaySeconds: 60
             periodSeconds: 5
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.11
-          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
-                    "-instances=mobius-network:us-central1:stellar=tcp:5432",
-                    "-credential_file=/secrets/cloudsql/credentials.json"]
-          volumeMounts:
-            - name: cloudsql-instance-credentials
-              mountPath: /secrets/cloudsql
-              readOnly: true
-            - name: ssl-certs
-              mountPath: /etc/ssl/certs
-            - name: cloudsql
-              mountPath: /cloudsql
       volumes:
         - name: config-storage
           configMap:

@@ -43,7 +43,7 @@ bifrost:
   secret:
     BIFROST_BITCOIN_RPC_PASS: "-"
     BIFROST_STELLAR_SIGNER_SECRET_KEY: "-"
-    BIFROST_DATABASE_URL: "user=stellar password=- host=127.0.0.1 dbname=bifrost"
+    BIFROST_DATABASE_URL: "postgresql://stellar:-@127.0.0.1/bifrost?sslmode=disable"
   environment:
     BIFROST_PORT: "8000"
     BIFROST_USING_PROXY: "false"
@@ -63,5 +63,3 @@ bifrost:
     BIFROST_STELLAR_NEEDS_AUTHORIZE: "true"
     # BIFROST_STELLAR_HORIZON: "https://horizon" See deployment.yaml
     BIFROST_STELLAR_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
-
-    BIFROST_DATABASE_DSN: $BIFROST_DATABASE_URL

@@ -34,12 +34,12 @@ spec:
             - secretRef:
                 name: bifrost-v{{ .Release.Revision }}-{{ .Release.Name }}-secret
           env:
-            - name: STELLAR_CORE_URL
-              value: "http://horizon-v{{ .Release.Revision }}-service-http:{{ .Values.horizon.environment.HTTP_PORT }}"
+            - name: BIFROST_STELLAR_HORIZON
+              value: "horizon-v{{ .Release.Revision }}-service-http:{{ .Values.horizon.environment.HTTP_PORT }}"
             - name: BIFROST_BITCOIN_RPC_SERVER
-              value: "http://bitcoin-v{{ .Release.Revision }}-service-http:{{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}"
+              value: "bitcoin-v{{ .Release.Revision }}-service-rpc:{{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}"
             - name: BIFROST_ETHEREUM_RPC_SERVER
-              value: "http://ethereum-v{{ .Release.Revision }}-service-http:{{ .Values.ethereum.args.rpcport }}"
+              value: "ethereum-v{{ .Release.Revision }}-service-rpc:{{ .Values.ethereum.args.rpcport }}"
           ports:
             - containerPort: {{ .Values.bifrost.environment.BIFROST_PORT }}
               name: http

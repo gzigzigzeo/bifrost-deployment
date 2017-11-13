@@ -29,6 +29,7 @@ bitcoin:
     BITCOIND_RPCUSER: bifrost
     BITCOIND_RPCCONNECT: bitcoin
     BITCOIND_PRINTTOCONSOLE: "1"
+    BITCOIND_PRUNE: "2048"
 
 ethereum:
   args:

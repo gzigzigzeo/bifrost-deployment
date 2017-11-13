@@ -1,8 +1,0 @@
-{{- $file := printf "config/bifrost.%s.cfg.tmpl" .Values.stage }}
-apiVersion: v1
-kind: ConfigMap
-data:
-  bifrost.cfg.tmpl: |
-{{ .Files.Get $file | indent 4 }}
-metadata:
-  name: bifrost-v{{ .Release.Revision }}-configmap-files

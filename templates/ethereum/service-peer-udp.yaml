@@ -1,12 +1,14 @@
-apiVersion: v1
-kind: Service
-spec:
-  type: LoadBalancer
-  ports:
-  - protocol: UDP
-    port: {{ .Values.ethereum.args.port }}
-    targetPort: {{ .Values.ethereum.args.port }}
-  selector:
-    component: ethereum
-metadata:
-  name: ethereum-v{{ .Release.Revision }}-service-peer-udp
+# QUOTA!
+
+# apiVersion: v1
+# kind: Service
+# spec:
+#  type: LoadBalancer
+#  ports:
+#  - protocol: UDP
+#    port: {{ .Values.ethereum.args.port }}
+#    targetPort: {{ .Values.ethereum.args.port }}
+#  selector:
+#    component: ethereum
+#metadata:
+#  name: ethereum-service-peer-udp

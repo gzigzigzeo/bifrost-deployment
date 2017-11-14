@@ -27,6 +27,7 @@ bitcoin:
     BITCOIND_RPCALLOWIP: "::/0"
     BITCOIND_PRINTTOCONSOLE: "1"
     BITCOIND_PRUNE: "2048"
+    BITCOIND_PRINTTOCONSOLE: "1"
 
 ethereum:
   args:

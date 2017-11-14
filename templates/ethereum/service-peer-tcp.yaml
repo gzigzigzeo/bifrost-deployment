@@ -6,7 +6,8 @@ spec:
   - protocol: TCP
     port: {{ .Values.ethereum.args.port }}
     targetPort: {{ .Values.ethereum.args.port }}
+    name: ethereum-peer
   selector:
     component: ethereum
 metadata:
-  name: ethereum-v{{ .Release.Revision }}-service-peer-tcp
+  name: ethereum-service-peer-tcp

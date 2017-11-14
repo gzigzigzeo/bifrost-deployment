@@ -35,7 +35,7 @@ spec:
                 name: horizon-v{{ .Release.Revision }}-{{ .Release.Name }}-secret
           env:
             - name: STELLAR_CORE_URL
-              value: "http://core-v{{ .Release.Revision }}-service-http:{{ .Values.core.environment.HTTP_PORT }}"
+              value: "http://core-service-http:{{ .Values.core.environment.HTTP_PORT }}"
           ports:
             - containerPort: {{ .Values.horizon.environment.HTTP_PORT }}
               name: http

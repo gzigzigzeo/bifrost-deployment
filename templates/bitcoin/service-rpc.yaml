@@ -6,7 +6,8 @@ spec:
   - protocol: TCP
     port: {{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}
     targetPort: {{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}
+    name: bitcoin-rpc
   selector:
     component: bitcoin
 metadata:
-  name: bitcoin-v{{ .Release.Revision }}-service-rpc
+  name: bitcoin-service-rpc

@@ -6,7 +6,8 @@ spec:
   - protocol: TCP
     port: {{ .Values.core.environment.PEER_PORT }}
     targetPort: {{ .Values.core.environment.PEER_PORT }}
+    name: core-peer
   selector:
     component: core
 metadata:
-  name: core-v{{ .Release.Revision }}-service-peer
+  name: core-service-peer

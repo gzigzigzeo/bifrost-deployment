@@ -6,7 +6,8 @@ spec:
   - protocol: TCP
     port: {{ .Values.core.environment.HTTP_PORT }}
     targetPort: {{ .Values.core.environment.HTTP_PORT }}
+    name: core-http
   selector:
     component: core
 metadata:
-  name: core-v{{ .Release.Revision }}-service-http
+  name: core-service-http

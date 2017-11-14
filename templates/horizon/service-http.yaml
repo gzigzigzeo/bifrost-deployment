@@ -6,7 +6,8 @@ spec:
   - protocol: TCP
     port: {{ .Values.horizon.environment.HTTP_PORT }}
     targetPort: {{ .Values.horizon.environment.HTTP_PORT }}
+    name: horizon-http
   selector:
     component: horizon
 metadata:
-  name: horizon-v{{ .Release.Revision }}-service-http
+  name: horizon-service-http

@@ -6,7 +6,8 @@ spec:
   - protocol: TCP
     port: {{ .Values.bifrost.environment.BIFROST_PORT }}
     targetPort: {{ .Values.bifrost.environment.BIFROST_PORT }}
+    name: bifrost-http
   selector:
     component: bifrost
 metadata:
-  name: bifrost-v{{ .Release.Revision }}-service-peer
+  name: bifrost-service-http

@@ -6,7 +6,8 @@ spec:
   - protocol: TCP
     port: {{ .Values.bitcoin.environment.BITCOIND_PORT }}
     targetPort: {{ .Values.bitcoin.environment.BITCOIND_PORT }}
+    name: bitcoin-peer
   selector:
     component: bitcoin
 metadata:
-  name: bitcoin-v{{ .Release.Revision }}-service-peer
+  name: bitcoin-service-peer

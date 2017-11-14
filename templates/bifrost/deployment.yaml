@@ -36,7 +36,7 @@ spec:
                 name: bifrost-v{{ .Release.Revision }}-{{ .Release.Name }}-secret
           env:
             - name: BIFROST_STELLAR_HORIZON
-              value: "horizon-service-http:{{ .Values.horizon.environment.HTTP_PORT }}"
+              value: "http://horizon-service-http:{{ .Values.horizon.environment.HTTP_PORT }}"
             - name: BIFROST_BITCOIN_RPC_SERVER
               value: "bitcoin-service-rpc:{{ .Values.bitcoin.environment.BITCOIND_RPCPORT }}"
             - name: BIFROST_ETHEREUM_RPC_SERVER

@@ -19,7 +19,7 @@ bitcoin:
   secret:
     BITCOIND_RPCAUTH: "bifrost:-"
   environment:
-    BITCOIND_PORT: "8333"
+    BITCOIND_PORT: "8333" # 18333 - testnet, doh!
     BITCOIND_RPCPORT: "8332"
     BITCOIND_TESTNET: "1"
     BITCOIND_ASSUMEVALID: 000000000000e86ed2844aec23e06bcfadbea88d5e718acf22de0ff24d13d44d

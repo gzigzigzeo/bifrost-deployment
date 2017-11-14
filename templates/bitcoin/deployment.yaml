@@ -30,10 +30,10 @@ spec:
               mountPath: "/home/bitcoin/.bitcoin"
           resources:
             requests:
-              memory: "512Mi"
+              memory: "1G"
               cpu: "100m"
             limits:
-              memory: "768Mi"
+              memory: "1.2G"
               cpu: "100m"
       volumes:
         - name: bitcoin-disk

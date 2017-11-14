@@ -24,10 +24,10 @@ spec:
             - name: ssl-certs
               mountPath: /etc/ssl/certs
             - name: cloudsql
-              mountPath: /cloudsql        
+              mountPath: /cloudsql
         - name: core
           image: gzigzigzeo/docker-stellar-core
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.core.environment.PEER_PORT }}
               name: peer
@@ -43,7 +43,7 @@ spec:
               mountPath: /etc/confd/templates/stellar-core.cfg.tmpl
               subPath: stellar-core.cfg.tmpl
             - name: core-disk
-              mountPath: /var/stellar/core
+              mountPath: {{ .Values.core.environment.STELLAR_CORE_BASE_PATH }}
           resources:
             requests:
               memory: "512Mi"

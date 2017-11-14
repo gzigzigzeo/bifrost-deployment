@@ -28,6 +28,7 @@ spec:
         - name: bifrost
           image: nebolsin/bifrost
           imagePullPolicy: Always
+          command: ["tail", "-f", "/dev/null"]
           envFrom:
             - configMapRef:
                 name: bifrost-v{{ .Release.Revision }}-configmap-env

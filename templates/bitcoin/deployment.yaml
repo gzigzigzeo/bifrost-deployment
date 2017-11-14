@@ -14,7 +14,7 @@ spec:
       containers:
         - name: bitcoin
           image: nebolsin/bitcoin-rpc
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: bitcoin-v{{ .Release.Revision }}-configmap-env
@@ -31,10 +31,10 @@ spec:
           resources:
             requests:
               memory: "512Mi"
-              cpu: "125m"
+              cpu: "100m"
             limits:
               memory: "768Mi"
-              cpu: "250m"              
+              cpu: "100m"
       volumes:
         - name: bitcoin-disk
           gcePersistentDisk:

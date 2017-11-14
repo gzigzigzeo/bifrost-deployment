@@ -14,7 +14,7 @@ spec:
       containers:
         - name: ethereum
           image: ethereum/client-go
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           args:
           {{- range $name, $value := .Values.ethereum.args }}
           {{- if eq ($value | typeOf) "bool" }}
@@ -40,10 +40,10 @@ spec:
           resources:
             requests:
               memory: "512Mi"
-              cpu: "125m"
+              cpu: "100m"
             limits:
               memory: "768Mi"
-              cpu: "250m"
+              cpu: "100m"
       volumes:
         - name: ethereum-disk
           gcePersistentDisk:

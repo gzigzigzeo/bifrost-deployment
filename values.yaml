@@ -35,7 +35,10 @@ ethereum:
     cache: "512"
     port: "30303"
     rpc: true
+    rpcaddr: "0.0.0.0"
     rpcport: "8545"
+    rpcapi: "eth,net,web3"
+    verbosity: "5"
 
 bifrost:
   secret:

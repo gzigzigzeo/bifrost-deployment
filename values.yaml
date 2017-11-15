@@ -9,7 +9,7 @@ core:
 
 horizon:
   environment:
-    HTTP_PORT: "8000"
+    PORT: "80"
   secret:
     DATABASE_URL: "postgres://stellar:-@127.0.0.1/horizon?sslmode=disable"
     STELLAR_CORE_DATABASE_URL: "postgres://stellar:-@127.0.0.1/core?sslmode=disable"

@@ -4,8 +4,8 @@ spec:
   type: LoadBalancer
   ports:
   - protocol: TCP
-    port: {{ .Values.horizon.environment.HTTP_PORT }}
-    targetPort: {{ .Values.horizon.environment.HTTP_PORT }}
+    port: {{ .Values.horizon.environment.PORT }}
+    targetPort: {{ .Values.horizon.environment.PORT }}
     name: horizon-http
   selector:
     component: horizon

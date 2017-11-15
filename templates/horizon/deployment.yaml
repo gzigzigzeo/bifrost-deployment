@@ -27,7 +27,7 @@ spec:
               mountPath: /cloudsql
         - name: horizon
           image: gzigzigzeo/docker-stellar-horizon
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           envFrom:
             - configMapRef:
                 name: horizon-v{{ .Release.Revision }}-configmap-env
@@ -37,7 +37,7 @@ spec:
             - name: STELLAR_CORE_URL
               value: "http://core-service-http:{{ .Values.core.environment.HTTP_PORT }}"
           ports:
-            - containerPort: {{ .Values.horizon.environment.HTTP_PORT }}
+            - containerPort: {{ .Values.horizon.environment.PORT }}
               name: http
           resources:
             requests:

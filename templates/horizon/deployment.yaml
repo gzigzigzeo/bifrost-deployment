@@ -44,8 +44,8 @@ spec:
               memory: "512Mi"
               cpu: "125m"
             limits:
-              memory: "768Mi"
-              cpu: "125m"
+              memory: "1G"
+              cpu: "250m"
       volumes:
         - name: cloudsql-instance-credentials
           secret:
